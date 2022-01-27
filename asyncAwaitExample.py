@@ -2,21 +2,31 @@ import curses
 import os
 from playsound import playsound
 import asyncio
+async def cancel_me():
+    print('cancel_me(): before sleep')
 
-def func1():
-	playsound('pyGen.wav')
-	return
+    try:
+        # playsound('pyGen.wav')
+        # Wait for 1 hour
+        await asyncio.sleep(3600)
+    except asyncio.CancelledError:
+        print('cancel_me(): cancel sleep')
+        raise
+    finally:
+        print('cancel_me(): after sleep')
 
-def func2():
-    playsound('marathi.wav')
-    return
+async def main():
+    # playsound('pyGen.wav')
+    # Create a "cancel_me" Task
+    task = asyncio.create_task(cancel_me())
 
-def main():
-    print('hello sagar')
-    task1 = asyncio.create_task(func1())
-    task2 = asyncio.create_task(func2())
-    # await func1()
-    # await func2()
-    print('Bye Sagar')
+    # Wait for 1 second
+    await asyncio.sleep(1)
+
+    task.cancel()
+    try:
+        await task
+    except asyncio.CancelledError:
+        print("main(): cancel_me is cancelled now")
 
 asyncio.run(main())

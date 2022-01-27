@@ -6,10 +6,28 @@ from playsound import playsound
 import _curses
 
 async def func1():
-	playsound('pyGen.wav')
-	
+    print('func1(): before sleep')
+    try:
+        # playsound('pyGen.wav')
+        await asyncio.sleep(5)
+        print('func1(): done sleep')
+        # asyncio.create_task(playsound('pyGen.wav'))
+    except asyncio.CancelledError:
+        print('func1(): cancel sleep')
+        raise
+        
+        
 async def func2():
-    playsound('marathi.wav')
+    # playsound('marathi.wav')
+    print('func2(): before sleep')
+    try:
+        # playsound('marathi.wav')
+         await asyncio.sleep(5)
+         print('func2(): done sleep')
+        # await asyncio.create_task(playsound('marathi.wav'))
+    except asyncio.CancelledError:
+        print('func2(): cancel sleep')
+        raise
     
 class Display(ABC):
     def __init__(self, stdscr: "_curses._CursesWindow"):
@@ -77,8 +95,6 @@ class MyDisplay(Display):
         self.stdscr.refresh()
         
     def make_message(self, msg1) -> None:
-        # msg1 = "Custom message here"
-
         maxy, maxx = self.stdscr.getmaxyx()
         self.stdscr.erase()
 
